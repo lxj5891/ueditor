@@ -18,6 +18,10 @@ UE.plugins['video'] = function (){
      */
     function creatInsertStr(url,width,height,id,align,classname,type){
 
+        // console.log('creatInsertStr');
+        // console.log("url ", url);
+        // console.log("type ", type);
+
         url = utils.unhtmlForUrl(url);
         align = utils.unhtml(align);
         classname = utils.unhtml(classname);
@@ -35,6 +39,8 @@ UE.plugins['video'] = function (){
                 str = '<embed type="application/x-shockwave-flash" class="' + classname + '" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
                     ' src="' +  utils.html(url) + '" width="' + width  + '" height="' + height  + '"'  + (align ? ' style="float:' + align + '"': '') +
                     ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >';
+                
+                str = '<video  src="' + url + '"  controls="" style="width: 100%"></video>';
                 break;
             case 'video':
                 var ext = url.substr(url.lastIndexOf('.') + 1);
@@ -62,10 +68,10 @@ UE.plugins['video'] = function (){
     }
 
     me.addOutputRule(function(root){
-        switchImgAndVideo(root,true)
+        // switchImgAndVideo(root,true)
     });
     me.addInputRule(function(root){
-        switchImgAndVideo(root)
+        // switchImgAndVideo(root)
     });
 
     /**
@@ -141,16 +147,16 @@ UE.plugins['video'] = function (){
             for(var i=0,vi,len = videoObjs.length;i<len;i++){
                 vi = videoObjs[i];
                 cl = (type == 'upload' ? 'edui-upload-video video-js vjs-default-skin':'edui-faked-video');
-                html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'image'));
+                html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'embed'));
             }
             me.execCommand("inserthtml",html.join(""),true);
-            var rng = this.selection.getRange();
-            for(var i= 0,len=videoObjs.length;i<len;i++){
-                var img = this.document.getElementById('tmpVedio'+i);
-                domUtils.removeAttributes(img,'id');
-                rng.selectNode(img).select();
-                me.execCommand('imagefloat',videoObjs[i].align)
-            }
+            // var rng = this.selection.getRange();
+            // for(var i= 0,len=videoObjs.length;i<len;i++){
+            //     var img = this.document.getElementById('tmpVedio'+i);
+            //     domUtils.removeAttributes(img,'id');
+            //     rng.selectNode(img).select();
+            //     me.execCommand('imagefloat',videoObjs[i].align)
+            // }
         },
         queryCommandState : function(){
             var img = me.selection.getRange().getClosedNode(),
