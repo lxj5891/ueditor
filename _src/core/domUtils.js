@@ -2078,8 +2078,15 @@ var domUtils = dom.domUtils = {
      * @return { Boolean } 是否是空元素
      */
     isEmptyBlock:function (node,reg) {
-        if(node.nodeType != 1)
+        //小云修复问题
+        if (!node) {
             return 0;
+        }
+
+        if (node.nodeType != 1) {
+            return 0;
+        }
+            
         reg = reg || new RegExp('[ \xa0\t\r\n' + domUtils.fillChar + ']', 'g');
 
         if (node[browser.ie ? 'innerText' : 'textContent'].replace(reg, '').length > 0) {

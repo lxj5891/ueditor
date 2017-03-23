@@ -344,8 +344,23 @@
                 textarea.style.display = ''
             }
 
-            textarea.style.width = me.iframe.offsetWidth + 'px';
-            textarea.style.height = me.iframe.offsetHeight + 'px';
+            // 小云商户修复问题
+            if (me && me.iframe) {
+                if (me.iframe.offsetWidth) {
+                    textarea.style.width = me.iframe.offsetWidth + 'px';
+                } else {
+                    textarea.style.width = '200px';
+                }
+
+                if (me.iframe.offsetHeight) {
+                    textarea.style.height = '300px';
+                }
+                
+            } else {
+                textarea.style.width = '200px';
+                textarea.style.height = '300px';
+            }
+            
             textarea.value = me.getContent();
             textarea.id = me.key;
             container.innerHTML = '';
@@ -727,7 +742,15 @@
                 return '';
             }
             me.fireEvent('beforegetcontent');
-            var root = UE.htmlparser(me.body.innerHTML,ignoreBlank);
+            
+            var bodyInnerHTML = ''
+            //小云商户修复
+            if (me && me.body && me.body.innerHTML) {
+                bodyInnerHTML = me.body.innerHTML
+            }
+
+            var root = UE.htmlparser(bodyInnerHTML,ignoreBlank);
+
             me.filterOutputRule(root);
             me.fireEvent('aftergetcontent', cmd,root);
             return  root.toHtml(formatter);
@@ -1380,7 +1403,15 @@
          * ```
          */
         getLang: function (path) {
-            var lang = UE.I18N[this.options.lang];
+
+            //小云商户修复
+            var optionLang = 'zh-cn';
+            if (this && this.options && this.options.lang) {
+                optionLang = this.options.lang;
+            }
+
+            var lang = UE.I18N[optionLang];
+
             if (!lang) {
                 throw Error("not import language file");
             }
