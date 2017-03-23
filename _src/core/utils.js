@@ -883,10 +883,16 @@ var utils = UE.utils = {
                         doReady(doc)
                     });
                 } else {
-                    doc.addEventListener("DOMContentLoaded", function () {
-                        doc.removeEventListener("DOMContentLoaded", arguments.callee, false);
+                    //小云社群  bugfix  DOMContentLoaded
+                    var fnDOMContentLoaded = function () {
+                        try {
+                            doc.removeEventListener("DOMContentLoaded", fnDOMContentLoaded, false);
+                        } catch(e){
+                        }
                         doReady(doc);
-                    }, false);
+                    };
+                    doc.addEventListener("DOMContentLoaded", fnDOMContentLoaded, false);
+                    
                     win.addEventListener('load', function () {
                         doReady(doc)
                     }, false);
